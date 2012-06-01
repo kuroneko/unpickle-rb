@@ -193,23 +193,21 @@ module Unpickle
             end
             raise UnpickleException, "Hit end of input stream"
         end
-
     end
 
-end
-
-# Unpickle the python object pickled into str.
-# 
-# At this time, this ONLY works with a limited set of constructs 
-# (dicts, lists, tuples, strings, ints, bools, None) and only with
-# protocol 0.
-# 
-# Object uniqueness should obey the python semantics but is largely 
-# untested.
-#
-# Raises an UnpickleException if anything goes wrong.
-def unpickle(str)
-    p = Unpickle::PickleMachine.new(str)
-    return p.unpickle
+    # Unpickle the python object pickled into str.
+    # 
+    # At this time, this ONLY works with a limited set of constructs 
+    # (dicts, lists, tuples, strings, ints, bools, None) and only with
+    # protocol 0.
+    # 
+    # Object uniqueness should obey the python semantics but is largely 
+    # untested.
+    #
+    # Raises an UnpickleException if anything goes wrong.
+    def Unpickle.loads(str)
+        p = Unpickle::PickleMachine.new(str)
+        return p.unpickle
+    end
 end
 
