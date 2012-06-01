@@ -2,7 +2,7 @@ require 'rake'
 
 Gem::Specification.new do |s|
   s.name        = 'unpickle'
-  s.version     = '0.0.1'
+  s.version     = '0.0.2'
   s.date        = '2012-06-01'
   s.summary     = "unpickle python objects in ruby"
   s.description = "A library to unpickle simple python objects directly into ruby"
