@@ -7,9 +7,9 @@ This is a very limited tool to unpickle python 'pickle' objects.
     require 'unpickle'
     
     fh = File.open('some.pickle')
-    o = unpickle(fh.read)
+    o = Unpickle.loads(fh.read)
 
-unpickle() will raise Unpickle::UnpickleException if it doesn't support an
+loads() will raise Unpickle::UnpickleException if it doesn't support an
 opcode in the picklestream, or encounters some kind of problem or invalid 
 sequence.
 
@@ -28,9 +28,6 @@ None will be returned as nil.
 
  * Support more of protocol 0.
  * Support newer protocols.
- * Test object identity mapping.
- * Package as a gem
- * fix namespace.
 
 # Author
 
