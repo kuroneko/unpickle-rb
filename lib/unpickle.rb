@@ -1,17 +1,21 @@
-# unpickle.rb
-# 
-# baby-unpickler to handle limited protocol 0 crap.
+# Library to handle a limited subset of python objects
+# picked using protocol 0.
 #
-# vim:et sts=4 sw=4 ts=8:
-#
+# Author:: Chris Collins (mailto:kuroneko-rubygems@sysadninjas.net)
+# Copyright:: Copyright (c) 2012 Chris Collins, Anchor Systems Pty Ltd
 module Unpickle
+    # UnpickleException is the superclass for all exceptions thrown by
+    # the unpickler.
+    # 
+    # Currently this gets thrown directly, but future versions may 
+    # subclass this to provide better granularity in error reporting.
     class UnpickleException < RuntimeError
     end
 
-    class Mark
+    class Mark #:nodoc:
     end
 
-    class PickleMachine
+    class PickleMachine #:nodoc: all
         def initialize(input)
             @stack = []
             @memo = {}
@@ -201,13 +205,10 @@ module Unpickle
     # (dicts, lists, tuples, strings, ints, bools, None) and only with
     # protocol 0.
     # 
-    # Object uniqueness should obey the python semantics but is largely 
-    # untested.
-    #
     # Raises an UnpickleException if anything goes wrong.
     def Unpickle.loads(str)
         p = Unpickle::PickleMachine.new(str)
         return p.unpickle
     end
 end
-
+# vim:et sts=4 sw=4 ts=8:

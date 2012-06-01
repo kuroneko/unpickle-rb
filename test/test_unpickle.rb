@@ -1,6 +1,5 @@
-# tests for Unpickle.loads.rb
+# tests for lib/unpickle.rb
 #
-# vim:et sts=4 sw=4 ts=8:
 require 'test/unit'
 require 'unpickle'
 
@@ -97,3 +96,4 @@ class UnpickleTests < Test::Unit::TestCase
         assert(o.object_id == o['b']['a'].object_id)
     end
 end
+# vim:et sts=4 sw=4 ts=8:
