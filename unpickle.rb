@@ -65,7 +65,6 @@ module Unpickle
         # returns the value.
         def read_string
             strout = ''
-            # if not quoted, skip ahead.
             if next_char != '\''
                 raise UnpickleException, "Couldn't find leading quote for string"
             end
