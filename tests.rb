@@ -79,4 +79,21 @@ class UnpickleTests < Test::Unit::TestCase
 
         assert_equal({'a' => [1,2,3,4], 'b' => [1,2,3], 'c' => nil, 'd' => 'abcd'}, o)
     end
+
+    def test_recursive
+        # >>> aobj = {}
+        # >>> bobj = {'a': aobj}
+        # >>> aobj['b'] = bobj
+        # >>> pickle.dumps(aobj, 0)
+        pickle_str = "(dp0\nS'b'\np1\n(dp2\nS'a'\np3\ng0\nss."
+
+        o = unpickle(pickle_str)
+
+        assert(o.is_a?(Hash))
+        assert(o.include?('b'))
+        assert(o['b'].is_a?(Hash))
+        assert(o['b'].include?('a'))
+        # check that the object identity is correctly respected.
+        assert(o.object_id == o['b']['a'].object_id)
+    end
 end

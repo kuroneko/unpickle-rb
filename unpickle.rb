@@ -182,6 +182,10 @@ module Unpickle
                 when 'a' # APPEND
                     e = @stack.pop
                     @stack[-1].push(e)
+                when '0' # POP
+                    @stack.pop
+                when '2' # DUP
+                    @stack.push(@stack[-1])
                 when '.' # STOP
                     return @stack.pop
                 else
