@@ -16,6 +16,16 @@ class UnpickleTests < Test::Unit::TestCase
         assert_equal('abcdefg', o)
     end
 
+    def test_unicode_string
+        # >>> a = u"abc\ndef"
+        # >>> pickle.dumps(a,0)
+        pickle_str = "Vabc\\u000adef\np0\n."
+
+        o = Unpickle.loads(pickle_str)
+
+        assert_equal("abc\ndef", o)
+    end
+
     def test_simple_bool_true
         # >>> pickle_obj = True
         pickle_str = "I01\n."

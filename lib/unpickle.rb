@@ -64,6 +64,24 @@ module Unpickle
             raise UnpickleException, "Couldn't find Mark"
         end
 
+        # read a hex number off of the input stream
+        # using lookahead, maximum of length digits
+        # 
+        # return the value of the number
+        def read_hex(length=2)
+            num = ''
+            while peek_char.match(/[\dA-Fa-f]/)
+                num += next_char
+                if num.length >= length
+                    break
+                end
+            end
+            unless (1..length).include?(num.length)
+                raise UnpickleException, "Bad hex sequence in string"
+            end
+            return num.to_i(16)
+        end
+
         # read from the input stream to read the python string.
         #
         # returns the value.
@@ -79,17 +97,7 @@ module Unpickle
                     opt = next_char
                     case opt
                     when 'x'
-                        num = ''
-                        while peek_char.match(/[\dA-Fa-f]/)
-                            num += next_char
-                            if num.length >= 2
-                                break
-                            end
-                        end
-                        unless (1..2).include?(num.length)
-                            raise UnpickleException, "Bad \\x sequence in string"
-                        end
-                        strout += num.to_i(16).chr
+                        strout += read_hex(2).chr
                     when '0'
                         num = ''
                         while peek_char.match(/[0-7]/)
@@ -126,6 +134,34 @@ module Unpickle
             return strout
         end
 
+        def read_unicode
+            strout = ""
+            while not at_end?
+                c = next_char
+                case c
+                when "\\"
+                    esc = next_char
+                    case esc
+                    when "x"
+                        strout += read_hex(2).chr
+                    when "u"
+                        strout += read_hex(4).chr
+                    when "U"
+                        strout += read_hex(8).chr
+                    when "\\"
+                        strout += "\\"
+                    else
+                        raise UnpickleException, "Unexpected \\ sequence in unicode string"
+                    end
+                when "\n"
+                    return strout
+                else
+                    strout += c
+                end
+            end
+            raise UnpickleException, "Unexpected end of stream during unicode object"
+        end
+
         def unpickle
             while not at_end?
                 op = next_char
@@ -155,6 +191,9 @@ module Unpickle
                 when 'S' # STRING
                     newstr = read_string
                     @stack.push(newstr)
+                when 'V' # UNICODE
+                    newuc = read_unicode
+                    @stack.push(newuc)
                 when 'p' # PUT (string)
                     index = read_int
                     @memo[index] = @stack[-1]
